@@ -4,6 +4,47 @@ Chapters to read:
 
 TEXTBOOK NOTES
 
+Chapter 3
+cudaMemcpy(destination, source, memorySizeBytes, DIRECTION)
+	Cannot be used to copy memory between seperate GPU Devices.
+	DIRECTIONS:
+		cudaMemcpyHostToDevice
+		cudaMemcpyDeviceToHost
+		cudaMemcpyDeviceToDevice
+		cudaMemcpyHostToHost
+SPMD - Single Program, Multiple-Data
+	A popular parallel programming style.
+Executing kernel methods.
+	FunctionName<<<dimensionOfBlocks, dimensionOfThreads>>>(function_params);
+	dimensionOfBlocks, also dimGrid by the textbook, defines how many blocks there are.
+	dimensionOfThreads, also dimBlock by the textbook, defines how many threads there are in each block.
+
+The "CUDA Programming Guide" is a thing. I should probably get that.
+
+Chapter 4
+Blocks and threads can be specified in up to three dimensions, and the index can be accessed like so:
+	blockIdx.x, blockIdx.y, blockIdx.z
+	threadIdx.x, threadIdx.y, threadIdx.z
+gridDim provide the dimension of the grid. Usage: ???
+blockDim dimension of each block. Usage: blockDim.x, blockDim.y, blockDim.z
+int threadId = blockIdx.x * blockDim.x + threadIdx.x;
+
+For 1D blocks or threads, can use <<<int numberOfBlocks, int numberOfThreads>>>.
+In contrast to <<<dim3 blockDimension, dim3 threadDimension>>>
+
+Criticism: The book says things like "In general, blocks are organized into 3D arrays of threads." but doesn't justify why this is true.
+
+Syncronization
+	__syncthreads() will block this thread until every single thread in the block reaches this point.
+		Importance of __syncthreads() will be discussed in Chapter 5. Excited to read that! YES :D
+
+RANDOM NOTES
+methodName defines a method that is on the host, callable from the host. ie, __host__
+kMethodName defines a method that is in the kernel, callable from the Host. ie, __global__
+dMethodName defines a method that is in the device, callable from the device. ie, __device__
+uMethodName defines a utility. This is a "utility" that methods on the Host/Device can use. ie, __host__ __device__
+dVariable defines a variable that points to device memory.
+
 LECTURE NOTES
 
 1.2
@@ -213,5 +254,86 @@ __global void KernelMatrixMultiplication(int m, int n, int k, float* d_A, float*
 }
 
 
+LAB NOTES
 
+Logging
+	wbLog takes: OFF, FATAL, ERROR, WARN, INFO, DEBUG, or TRACE
+	wbLog(TRACE, "The value of x = ", x)
+Timing
+	wbTime_start(tag, msg)
+	wbTime_stop(tag, msg)
+	These tags must match
 
+Local Development
+The library used throughout the course can be downloaded from Github (https://github.com/abduld/libwb).
+Once linked against the library, you can launch the your program as follows:
+	./program -e <expected_output_file> -i <input_file_1>,<input_file_2> -o <output_file> -t <type>
+The <expected_output_file> and <input_file_n> are the input and output files provided in the dataset.
+The <output_file> is the location you’d like to place the output from your program.
+The <type> is the output file type: vector, matrix, or image. If an MP does not expect an input or output, then pass none as the parameter.
+
+Kerrigan (my laptop, Asus G53SX) has a GTX 560M, which supports CUDA 2.1
+
+General flow:
+	Allocate device memory
+	Copy host memory to device
+	Initialize thread block and kernel grid dimensions
+	Invoke CUDA kernel
+	Copy results from device to host
+	Free device memory
+	Write the CUDA kernel
+
+Output of Lap Device Output:
+Kind	Location		Time (ms)	Message
+GPUs	main.cu::14		0.178785	Getting GPU Data.
+
+Level	Location	Message
+Trace	main::30	There is 1 device supporting CUDA
+Trace	main::36	Device 0 name: GRID K520
+Trace	main::37	Computational Capabilities: 3.0
+Trace	main::38	Maximum global memory size: 4294770688
+Trace	main::39	Maximum constant memory size: 65536
+Trace	main::40	Maximum shared memory size per block: 49152
+Trace	main::43	Maximum block dimensions: 1024 x 1024 x 64
+Trace	main::46	Maximum grid dimensions: 2147483647 x 65535 x 65535
+Trace	main::47	Warp size: 32
+
+int main(int argc, char ** argv) {
+    wbArg_read(argc, argv);
+    int deviceCount;
+    cudaGetDeviceCount(&deviceCount);
+    wbTime_start(GPU, "Getting GPU Data."); //@@ start a timer
+    for (int dev = 0; dev < deviceCount; dev++) {
+        cudaDeviceProp deviceProp;
+        cudaGetDeviceProperties(&deviceProp, dev);
+        if (dev == 0) {
+            if (deviceProp.major == 9999 && deviceProp.minor == 9999) {
+                wbLog(TRACE, "No CUDA GPU has been detected");
+                return -1;
+            } else if (deviceCount == 1) {
+                //@@ WbLog is a provided logging API (similar to Log4J).
+                //@@ The logging function wbLog takes a level which is either
+                //@@ OFF, FATAL, ERROR, WARN, INFO, DEBUG, or TRACE and a
+                //@@ message to be printed.
+                wbLog(TRACE, "There is 1 device supporting CUDA");
+            } else {
+                wbLog(TRACE, "There are ", deviceCount, " devices supporting CUDA");
+            }
+        }
+
+        wbLog(TRACE, "Device ", dev, " name: ", deviceProp.name);
+        wbLog(TRACE, " Computational Capabilities: ", deviceProp.major, ".", deviceProp.minor);
+        wbLog(TRACE, " Maximum global memory size: ", deviceProp.totalGlobalMem);
+        wbLog(TRACE, " Maximum constant memory size: ", deviceProp.totalConstMem);
+        wbLog(TRACE, " Maximum shared memory size per block: ", deviceProp.sharedMemPerBlock);
+        wbLog(TRACE, " Maximum block dimensions: ", deviceProp.maxThreadsDim[0], " x ",
+                                                    deviceProp.maxThreadsDim[1], " x ",
+                                                    deviceProp.maxThreadsDim[2]);
+        wbLog(TRACE, " Maximum grid dimensions: ", deviceProp.maxGridSize[0], " x ",
+                                                   deviceProp.maxGridSize[1], " x ",
+                                                   deviceProp.maxGridSize[2]);
+        wbLog(TRACE, " Warp size: ", deviceProp.warpSize);
+    }
+    wbTime_stop(GPU, "Getting GPU Data."); //@@ stop the timer
+    return 0;
+}
