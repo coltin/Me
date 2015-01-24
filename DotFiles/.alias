@@ -1,0 +1,7 @@
+## General Aliases
+alias :wq="echo You\'re not in vim ,friend"
+
+## Git
+alias status='git status'
+alias status-full='git ls-files --others --exclude-standard'
+alias add="git add .; git add -u .; git status"
