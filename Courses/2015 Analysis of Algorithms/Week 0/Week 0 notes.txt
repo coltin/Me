@@ -1,0 +1,84 @@
+
+LECTURES
+
+1.2
+Math is hard. O_O
+
+1.3
+
+How to analyze an algorithm (by Knuth):
+	Develop a good implementation and a realistic input model.
+	Determine the cost and execution frequency of each operation.
+	Calculate the total running time: Sum_q(frequency(q) x cost(q)).
+	Run experiments to validate the model and analysis.
+Benefits:
+	Scientific foundation for AofA.
+	Can predict performance and compare algorithms.
+Drawbacks
+	Model may be unrealistic.
+	Excessive detail likely in the analysis.
+
+Theory of Algorithms
+	Aho, Hopcroft, and Ullman in "The design and analysis of computer algorithms"
+	Cormen, Leiserson, Rivest, and Stein in "Introduct"
+	Analyze worst case cost.
+	Use O-notation for upper bound.
+	Classify algorithms by these costs.
+Benefit
+	Enabled a new age of algorithm design.
+Drawback
+	Analysis is often unsuitable for scientific studies. Unprecise predictions.
+Analytical Combinatorics
+	Can be useful for scientific studies.
+	A calculus for developing models.
+	Universal laws that encompass tge detail in the analysis.
+
+1.4
+
+Analytical Combinatorics
+	A calculus for the quantitative study of large combinatorial structures.
+	Generating functions are the central object of study.
+	Basic process:
+		Define a combinatorial construction that precisely specifies the structure.
+		Use a symbolic transfer theorem to derive a GF equation.
+		Use analytric transfer theorem to extract coefficient asymptotics.
+
+Step 1: Specify the class of objects being studied.
+Combinatorial constructions
+	Algebraic formulas built from natural combinatorial operators.
+	Operands are atoms or other combinatorial constructions.
+	Two cases: atoms are unlabelled (indistinguishable) or labelled (all different)
+Basic constructions (unlabelled):
+	Disjount union				A = B + C
+	Cartesian product			A = B x C
+	Sequence					A = SEQ(B)
+Example
+	A binary stree is empty or a node and two binary trees
+	T = E + Z x T x T
+	E is an empty class
+	Z is an atom
+
+Step 2: Introduce generating functions. Use symbolic transfer theorems to derive GF eqution from construction.
+Ordinary generating function:
+	T(z) = sum_N>=0 (T_N*Z^N) = sum_[t in T](z^abs(t))
+Basic transfer theorems (unlabelled classes)
+	Disjoint union				A(z) = B(z) + C(z)
+	Cartesian product			A(z) = B(z)C(z)
+	Sequence					A(z) = 1 / (1-B(z))
+Example
+	Binary trees
+	Combinatorial class:		T = Set of all binary trees
+	Size function:				|t| = Number of nodes in t
+	Counting sequence:			T_N = Number of trees with N nodes
+	Construction:				T = E + Z x T x T
+	Transfer to GF equation:	T(z) = 1 + zT(z)^2
+
+Step 3: Extract coefficients. Using analytic theorems based on viewing GF as a complex function.
+	simple pole					Crazy shit I can't type this.
+	standard scale				Crazier shit. There is a gamma function in that. What.
+	standard scale (logarithmic) NOPE.
+
+Textook
+O(f(N)) denotes the set of all g(N) such that |g(N) / f(N)| is bounded from above as N->inf.
+OMEGA(f(N)) denotes the set of all g(N) such that |g(N) / f(N)| is bounded from below by a strictly positive number as N->inf.
+THETA(f(N)) denotes the set of all...It's O(f(N)) and OMEGA(f(N)).
