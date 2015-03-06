@@ -1,6 +1,21 @@
-# This function will try to best guess at your current branch. If you are in a detached head state results may vary.
+# Returns your current branch. If you are not in a git repo, will return "not repo" which is super boring.
 function git_branch {
-  [ -d .git ] && git name-rev --name-only @
+  # This checks if we are currently in a git repo, suppressing stdin and stderr.
+	if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+		# Gets the current branches that are at HEAD.
+		# Selects the actual branch with '*' hack.
+		# Makes sure we only get 1 line with `head` due to paranoia.
+		# Removes trailing 3 characters " * ". So " * master" -> "master"
+		# Removes "(" from the start and ")" from the end with `sed`.
+		#  - This is for "(detached from f83fe38)", we don't want the parenthesis.
+		git branch --contains HEAD \
+			| grep '*' \
+			| head -n 1 \
+			| cut -c 3- \
+			| sed 's/^[ \(]*//;s/[ \)]*$//'
+	else
+		echo 'not repo'
+	fi
 }
 
 #Defines some colors for PS1 prompt
