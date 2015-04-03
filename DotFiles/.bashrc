@@ -28,4 +28,4 @@ GREEN="\[\e[00;32m\]"
 # Sets your prompt such that if you are in ~/Code/workspace/android which has a git repo
 # on branch "some_branch" your prompt will be, without quotes:
 # "android[some_branch]$ "
-export PS1="${LIGHT_BLUE}\W${WHITE}: ${YELLOW}[${GREEN}\$(git_branch)${YELLOW}]${WHITE}\\$ ${RESET}"
+export PS1="${LIGHT_BLUE}\W${YELLOW}[${GREEN}\$(git_branch)${YELLOW}]${WHITE}\\$ ${RESET}"
