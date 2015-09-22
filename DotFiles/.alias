@@ -1,7 +1,20 @@
 ## General Aliases
-alias :wq="echo You\'re not in vim ,friend"
+alias :wq="echo You\'re not in vim, friend"
 
 ## Git
-alias status='git status'
-alias status-full='git ls-files --others --exclude-standard'
-alias add="git add .; git add -u .; git status"
+alias git-status-full='git ls-files --others --exclude-standard'
+alias git-add="git add .; git add -u .; git status"
+alias git-update='git checkout master;git pull'
+alias git-amend='git add .;git commit --amend'
+alias git-log='git log --pretty=oneline --abbrev-commit'
+alias git-log-author='git log --pretty=oneline --abbrev-commit'
+alias git-files='git diff --name-status'
+alias git-discard='git checkout -- .; git submodule update'
+alias git-remotes='git branch -r | grep coltin'
+alias git-remote-delete='git push origin --delete'
+
+## Gradle
+alias g='./gradlew'
+
+## Python
+alias breakpoint='echo "import pdb; pdb.set_trace()"'
