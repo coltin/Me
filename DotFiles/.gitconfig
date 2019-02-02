@@ -1,0 +1,37 @@
+[user]
+	name = Coltin Caverhill
+	email = ultranova@gmail.com
+[color]
+    status = auto
+    branch = auto
+    ui = true
+    whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+[color "branch"]
+  current = yellow reverse 
+  local = yellow
+  remote = green 
+[color "diff"] 
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+  whitespace = red reverse 
+[color "status"]
+  added = yellow
+  changed = green 
+  untracked = cyan
+[merge]
+	conflictstyle = diff3
+[rerere]
+	enabled = 1
+	autoupdate = true
+[push]
+	default = current
+[core]
+	excludesfile = ~/tools/.gitignore_global
+[pull]
+	default = current
+[alias]
+	clear = checkout -- .
+	last = log -1 HEAD
+	alias = config --get-regexp ^alias\\.
