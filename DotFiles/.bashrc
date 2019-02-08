@@ -38,6 +38,8 @@ function git-cleanse() {
 function remember() {
     echo 'git rev-list master...HEAD'
     echo '   This will show all the different commits between master and HEAD'
+    echo 'nmap -sn 192.168.2.0/24'
+    echo '   Find all hosts on network'
 }
 alias breakpoint='echo "import pdb; pdb.set_trace()"'
 
